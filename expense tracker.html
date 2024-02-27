@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('https://img.freepik.com/vector-premium/ilustracion-vector-fondo-regreso-escuela_662848-497.jpg?w=360');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        #expense-container {
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.6); /* Semi-transparent white background */
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #3498db;
+        }
+
+        form {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            margin-bottom: 6px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        h3 {
+            margin-top: 20px;
+            color: #333;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .expense-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .expense-item span {
+            flex: 1;
+        }
+
+        .delete-btn {
+            cursor: pointer;
+            margin-left: 10px;
+            color: #e74c3c;
+            font-size: 18px;
+        }
+
+        p {
+            margin-top: 20px;
+            color: #333;
+            font-size: 18px;
+        }
+
+        #totalExpenses {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="expense-container">
+        <h2>Expense Tracker</h2>
+        <form id="expense-form">
+            <label for="expenseName">Expense Name:</label>
+            <input type="text" id="expenseName" required>
+            
+            <label for="expenseAmount">Expense Amount:</label>
+            <input type="number" id="expenseAmount" required>
+
+            <button type="button" onclick="addExpense()">Add Expense</button>
+        </form>
+
+        <h3>Expenses:</h3>
+        <ul id="expenses-list"></ul>
+
+        <p>Total Expenses: $<span id="totalExpenses">0.00</span></p>
+    </div>
+
+    <script>
+        const expenseForm = document.getElementById('expense-form');
+        const expensesList = document.getElementById('expenses-list');
+        const totalExpenses = document.getElementById('totalExpenses');
+
+        let total = 0;
+
+        function addExpense() {
+            const name = document.getElementById('expenseName').value;
+            const amount = parseFloat(document.getElementById('expenseAmount').value);
+
+            if (isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid expense amount.');
+                return;
+            }
+
+            total += amount;
+
+            const li = document.createElement('li');
+            li.className = 'expense-item';
+            li.innerHTML = `
+                <span>${name}</span>
+                <span>$${amount.toFixed(2)}</span>
+                <img src="https://w7.pngwing.com/pngs/779/735/png-transparent-trash-can-delete-icon-thumbnail.png" alt="Delete" class="delete-btn" onclick="deleteExpense(this)"  width="20" height="20">
+
+            `;
+
+            expensesList.appendChild(li);
+
+            totalExpenses.textContent = total.toFixed(2);
+
+            // Clear the input fields
+            document.getElementById('expenseName').value = '';
+            document.getElementById('expenseAmount').value = '';
+        }
+
+        function deleteExpense(element) {
+            const expenseItem = element.parentElement;
+            const expenseAmount = parseFloat(expenseItem.children[1].textContent.slice(1));
+            
+            total -= expenseAmount;
+
+            totalExpenses.textContent = total.toFixed(2);
+
+            expenseItem.remove();
+        }
+    </script>
+</body>
+</html>
